@@ -13,92 +13,101 @@ export default function Navbar() {
       setIsScrolled(window.scrollY > 50);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
         isScrolled
-          ? "bg-background/95 backdrop-blur-md shadow-lg"
+          ? "bg-background/90 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
           : "bg-transparent"
       }`}
     >
       <div className="container-custom">
-        <nav className="flex items-center justify-between h-20 md:h-24">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="font-heading text-2xl md:text-3xl font-semibold tracking-wide">
+        <nav className="flex items-center justify-between h-24 md:h-28">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 group">
+            <span className="font-serif text-2xl md:text-3xl font-light tracking-[0.1em] group-hover:text-accent transition-colors duration-500">
               Lens<span className="text-accent">Craft</span>
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-8">
-            {navItems.map((item) => (
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center gap-10">
+            {navItems.map((item, index) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-foreground-secondary hover:text-accent transition-colors duration-300 text-sm font-medium uppercase tracking-wider"
+                className="relative text-sm uppercase tracking-[0.15em] text-foreground-secondary hover:text-accent transition-colors duration-300 group"
+                style={{ animationDelay: `${index * 50}ms` }}
               >
                 {item.label}
+                <span className="absolute -bottom-1 left-0 w-0 h-px bg-accent transition-all duration-300 group-hover:w-full" />
               </Link>
             ))}
           </div>
 
+          {/* CTA Button */}
           <Link
             href="/contact"
-            className="hidden md:inline-flex px-6 py-3 bg-accent hover:bg-accent-hover text-background font-medium text-sm uppercase tracking-wider transition-all duration-300"
+            className="hidden lg:inline-flex px-8 py-3 bg-transparent border border-accent/30 text-accent font-serif text-xs uppercase tracking-[0.15em] hover:bg-accent hover:text-background hover:border-accent transition-all duration-500"
           >
             Book Now
           </Link>
 
+          {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden flex flex-col gap-1.5 p-2"
+            className="lg:hidden flex flex-col gap-1.5 p-2 group"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
           >
             <span
-              className={`w-6 h-0.5 bg-foreground transition-all duration-300 ${
+              className={`w-6 h-px bg-foreground transition-all duration-300 ${
                 isMobileMenuOpen ? "rotate-45 translate-y-2" : ""
-              }`}
+              } group-hover:bg-accent`}
             />
             <span
-              className={`w-6 h-0.5 bg-foreground transition-all duration-300 ${
+              className={`w-6 h-px bg-foreground transition-all duration-300 ${
                 isMobileMenuOpen ? "opacity-0" : ""
-              }`}
+              } group-hover:bg-accent`}
             />
             <span
-              className={`w-6 h-0.5 bg-foreground transition-all duration-300 ${
+              className={`w-6 h-px bg-foreground transition-all duration-300 ${
                 isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""
-              }`}
+              } group-hover:bg-accent`}
             />
           </button>
         </nav>
       </div>
 
+      {/* Mobile Menu */}
       <div
-        className={`md:hidden bg-background-secondary border-t border-border overflow-hidden transition-all duration-300 ${
-          isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        className={`lg:hidden overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          isMobileMenuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="container-custom py-6 flex flex-col gap-4">
-          {navItems.map((item) => (
+        <div className="bg-background-secondary/95 backdrop-blur-xl border-t border-border/50">
+          <div className="container-custom py-8 flex flex-col gap-6">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-lg font-light tracking-wide text-foreground-secondary hover:text-accent transition-colors duration-300"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
             <Link
-              key={item.href}
-              href={item.href}
-              className="text-foreground-secondary hover:text-accent transition-colors duration-300 text-lg font-medium py-2"
+              href="/contact"
+              className="inline-flex justify-center px-8 py-4 bg-accent text-background font-serif text-sm uppercase tracking-[0.15em] transition-all duration-300 hover:bg-accent-hover mt-4"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              {item.label}
+              Book Now
             </Link>
-          ))}
-          <Link
-            href="/contact"
-            className="inline-flex justify-center px-6 py-3 bg-accent hover:bg-accent-hover text-background font-medium text-sm uppercase tracking-wider transition-all duration-300 mt-4"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            Book Now
-          </Link>
+          </div>
         </div>
       </div>
     </header>

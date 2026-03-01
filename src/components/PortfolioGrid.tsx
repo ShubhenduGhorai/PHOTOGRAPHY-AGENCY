@@ -22,50 +22,54 @@ function Lightbox({ items, currentIndex, onClose, onNavigate }: LightboxProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-background/98 flex items-center justify-center animate-fade-in"
+      className="fixed inset-0 z-50 bg-background/98 backdrop-blur-xl flex items-center justify-center animate-reveal-scale"
       onClick={onClose}
     >
+      {/* Close button */}
       <button
-        className="absolute top-4 right-4 text-foreground-secondary hover:text-foreground p-2"
+        className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center text-foreground-secondary hover:text-foreground transition-smooth z-10"
         onClick={onClose}
         aria-label="Close"
       >
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
 
+      {/* Navigation arrows */}
       <button
-        className="absolute left-4 md:left-8 text-foreground-secondary hover:text-foreground p-2"
+        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-14 h-14 flex items-center justify-center text-foreground-secondary hover:text-accent transition-smooth z-10 group"
         onClick={(e) => {
           e.stopPropagation();
           onNavigate((currentIndex - 1 + items.length) % items.length);
         }}
         aria-label="Previous"
       >
-        <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-8 h-8 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
         </svg>
       </button>
 
       <button
-        className="absolute right-4 md:right-8 text-foreground-secondary hover:text-foreground p-2"
+        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-14 h-14 flex items-center justify-center text-foreground-secondary hover:text-accent transition-smooth z-10 group"
         onClick={(e) => {
           e.stopPropagation();
           onNavigate((currentIndex + 1) % items.length);
         }}
         aria-label="Next"
       >
-        <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-8 h-8 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
         </svg>
       </button>
 
+      {/* Image container */}
       <div
-        className="max-w-5xl max-h-[85vh] px-16 animate-fade-in-up"
+        key={currentIndex}
+        className="max-w-6xl max-h-[80vh] px-16 animate-reveal-scale"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative aspect-[4/3] md:aspect-[16/10]">
+        <div className="relative aspect-[16/10] rounded-lg overflow-hidden shadow-2xl">
           <Image
             src={item.imageUrl}
             alt={item.title}
@@ -74,16 +78,19 @@ function Lightbox({ items, currentIndex, onClose, onNavigate }: LightboxProps) {
             priority
           />
         </div>
-        <div className="text-center mt-6">
-          <h3 className="font-heading text-2xl mb-2">{item.title}</h3>
-          <span className="text-accent text-sm uppercase tracking-wider">{item.category}</span>
+        
+        {/* Caption */}
+        <div className="text-center mt-8">
+          <h3 className="font-serif text-2xl md:text-3xl mb-2">{item.title}</h3>
+          <span className="text-accent text-sm uppercase tracking-[0.2em]">{item.category}</span>
           {item.description && (
-            <p className="text-foreground-secondary mt-2">{item.description}</p>
+            <p className="text-foreground-secondary mt-3 max-w-lg mx-auto">{item.description}</p>
           )}
         </div>
       </div>
 
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+      {/* Progress dots */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
         {items.map((_, index) => (
           <button
             key={index}
@@ -91,8 +98,8 @@ function Lightbox({ items, currentIndex, onClose, onNavigate }: LightboxProps) {
               e.stopPropagation();
               onNavigate(index);
             }}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              index === currentIndex ? "bg-accent w-8" : "bg-foreground/30"
+            className={`h-0.5 rounded-full transition-all duration-500 ${
+              index === currentIndex ? "w-8 bg-accent" : "w-2 bg-foreground/30 hover:bg-foreground/50"
             }`}
           />
         ))}
@@ -113,35 +120,44 @@ export default function PortfolioGrid({ items, columns = 3, showCategory = false
 
   return (
     <>
-      <div className={`grid ${gridCols[columns]} gap-4 md:gap-6`}>
+      <div className={`grid ${gridCols[columns]} gap-6 md:gap-8`}>
         {items.map((item, index) => (
           <div
             key={item.id}
-            className="group cursor-pointer animate-fade-in-up"
-            style={{ animationDelay: `${index * 100}ms` }}
+            className="group cursor-pointer"
+            style={{
+              animationDelay: `${index * 75}ms`,
+            }}
             onClick={() => {
               setCurrentIndex(index);
               setLightboxOpen(true);
             }}
           >
-            <div className="relative aspect-[4/3] overflow-hidden rounded-sm">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-sm img-zoom">
               <Image
                 src={item.thumbnailUrl}
                 alt={item.title}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                className="object-cover"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
-              <div className="absolute inset-0 bg-background/0 group-hover:bg-background/40 transition-colors duration-300" />
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="bg-accent text-background px-4 py-2 text-sm font-medium uppercase tracking-wider">
-                  View
-                </span>
+              
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-slow" />
+              
+              {/* View indicator */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-slow">
+                <div className="w-16 h-16 rounded-full border border-accent/50 flex items-center justify-center transform scale-50 group-hover:scale-100 transition-transform duration-500">
+                  <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                  </svg>
+                </div>
               </div>
             </div>
+            
             {showCategory && (
-              <div className="mt-3">
-                <h3 className="font-heading text-lg group-hover:text-accent transition-colors duration-300">
+              <div className="mt-4">
+                <h3 className="font-serif text-lg group-hover:text-accent transition-smooth">
                   {item.title}
                 </h3>
                 <span className="text-foreground-muted text-sm">{item.category}</span>
