@@ -38,8 +38,8 @@ export const footerLinks = {
 };
 
 export const contactInfo = {
-  address: "123 Creative Avenue, New York, NY 10001",
+  address: "Panskura 721139",
   email: "hello@lenscraftstudio.com",
-  phone: "+1 (555) 123-4567",
+  phone: "+91 1234567891",
   hours: "Mon - Sat: 9:00 AM - 6:00 PM",
 };
