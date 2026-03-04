@@ -38,8 +38,8 @@ export const footerLinks = {
 };
 
 export const contactInfo = {
-  address: "Panskura 721139",
+  address: "Paris 7*****",
   email: "hello@lenscraftstudio.com",
-  phone: "+91 1234567891",
+  phone: "+XX 1234567891",
   hours: "Mon - Sat: 9:00 AM - 6:00 PM",
 };
